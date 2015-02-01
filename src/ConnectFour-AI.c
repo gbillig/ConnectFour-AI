@@ -25,6 +25,10 @@ int main(void) {
 		}
 	}
 
+	grid[5][2] = P1;
+	grid[5][3] = P1;
+	grid[5][4] = P1;
+
 
 	int h = heuristic(grid_ptr);
 	printf("Back in main, reference value: %d\n", grid[2][3]);

@@ -8,6 +8,9 @@
 #ifndef HEURISTIC_H_
 #define HEURISTIC_H_
 
-int heuristic(int* grid);
+#include "definitions.h"
+
+int heuristic(gridType* grid);
+int calc_diagonals(largeGridType grid);
 
 #endif /* HEURISTIC_H_ */

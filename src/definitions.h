@@ -18,11 +18,13 @@
 #define EMPTY	2;
 #define P1		0;
 #define P2		1;
+#define EDGE	3;
 /*
 #define P_INF	INT32_MAX;
 #define N_INF	INT32_MIN;
 */
 typedef int gridType[6][7];
+typedef int largeGridType[8][9];
 
 
 
