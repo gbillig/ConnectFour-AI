@@ -41,24 +41,22 @@ int heuristic(gridType* gridRef) {
 		}
 	}
 
-	/* Attribute definitions:
+	/* Attributes:
 	 *
-	 * Name: 4 in a line
-	 * Value: +INF
+	 * Name: calc_lines
+	 * Definition: Find all 2-lines and 3-lines that have potential to become a 4-line
+	 *
 	 */
 
 	int value = 0;
 	value += calc_lines(newGrid);
 
-	for(i=0; i<twoLineCounter; i++) {
-		printf("2line found : {%d, %d, %d}\n", twoLine[i][0], twoLine[i][1], twoLine[i][2]);
-	}
-	for(i=0; i<threeLineCounter; i++) {
-		printf("3line found : {%d, %d, %d}\n", threeLine[i][0], threeLine[i][1], threeLine[i][2]);
-	}
-
-	newGrid[2][3] = 10;
-	printf("Reference value: %d\nLocal Value: %d\n", (*gridRef)[2][3], newGrid[2][3]);
+//	for(i=0; i<twoLineCounter; i++) {
+//		printf("2line found : {%d, %d, %d}\n", twoLine[i][0], twoLine[i][1], twoLine[i][2]);
+//	}
+//	for(i=0; i<threeLineCounter; i++) {
+//		printf("3line found : {%d, %d, %d}\n", threeLine[i][0], threeLine[i][1], threeLine[i][2]);
+//	}
 
 	return value;
 }
@@ -76,7 +74,13 @@ int calc_lines(largeGridType grid) {
 			}
 		}
 	}
-	return 0;
+
+	int value;
+	int twoLineValue = 3;
+	int threeLineValue = 10;
+	value = twoLineCounter*twoLineValue + threeLineCounter*threeLineValue;
+
+	return value;
 }
 
 void search(largeGridType grid, int i, int j, int direction, int PLAYER) {

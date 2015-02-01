@@ -32,9 +32,6 @@ int main(void) {
 
 
 	int h = heuristic(grid_ptr);
-	printf("Back in main, reference value: %d\n", grid[2][3]);
-	//printf("+Inf: %d\n-Inf: %d\n", P_INF, N_INF);
-
 
 	return 0;
 }
