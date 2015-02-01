@@ -5,7 +5,7 @@
  *      Author: gbillig
  */
 
-typedef int gridType[6][7];
+#include "definitions.h"
 
 int heuristic(gridType* gridRef) {
 	gridType newGrid;
@@ -15,6 +15,12 @@ int heuristic(gridType* gridRef) {
 			newGrid[i][j] = (*gridRef)[i][j];
 		}
 	}
+
+	/* Attribute definitions:
+	 *
+	 * Name: 4 in a line
+	 * Value: +INFI
+	 */
 
 	int value = 0;
 
