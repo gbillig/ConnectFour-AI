@@ -107,6 +107,7 @@ void search(largeGridType grid, int i, int j, int direction, int PLAYER) {
 	//search first direction
 	int searching = 1;
 	int searchCounter = 1;
+	int deadEnd = 0;
 	while (searching) {
 		x = j+xOffset*searchCounter;
 		y = i+yOffset*searchCounter;
@@ -114,8 +115,11 @@ void search(largeGridType grid, int i, int j, int direction, int PLAYER) {
 			line[lineCounter] = x + y*8;
 			lineCounter++;
 			searchCounter++;
+		} else if (grid[y][x] == EMPTY) {
+			searching = 0;
 		} else {
 			searching = 0;
+			deadEnd++;
 		}
 	}
 
@@ -129,55 +133,61 @@ void search(largeGridType grid, int i, int j, int direction, int PLAYER) {
 			line[lineCounter] = x + y*8;
 			lineCounter++;
 			searchCounter++;
+		} else if (grid[y][x] == EMPTY) {
+			searching = 0;
 		} else {
 			searching = 0;
+			deadEnd++;
 		}
 	}
 
-	int lineSize = 0;
-	int n;
-	for (n=0; n<4; n++) {
-		if (line[n] != 0) {
-			lineSize++;
+	if (deadEnd < 2) {
+		int lineSize = 0;
+		int n;
+		for (n=0; n<4; n++) {
+			if (line[n] != 0) {
+				lineSize++;
+			}
 		}
-	}
 
-	int newLine;
-	if (lineSize > 1) {
-		qsort(line, 4, sizeof(*line), cmpfunc);
-		if (lineSize == 2) {
-			newLine = 1;
-			for(n=0; n<twoLineCounter; n++) {
-				if (array_eq(&line[2], &twoLine[n][0], 2)) {
-					newLine = 0;
-					break;
+		int newLine;
+		if (lineSize > 1) {
+			qsort(line, 4, sizeof(*line), cmpfunc);
+			if (lineSize == 2) {
+				newLine = 1;
+				for(n=0; n<twoLineCounter; n++) {
+					if (array_eq(&line[2], &twoLine[n][0], 2)) {
+						newLine = 0;
+						break;
+					}
+				}
+				if (newLine) {
+					twoLine[twoLineCounter][0] = line[2];
+					twoLine[twoLineCounter][1] = line[3];
+					twoLineCounter++;
 				}
 			}
-			if (newLine) {
-				twoLine[twoLineCounter][0] = line[2];
-				twoLine[twoLineCounter][1] = line[3];
-				twoLineCounter++;
-			}
-		}
-		if (lineSize == 3) {
-			newLine = 1;
-			for(n=0; n<threeLineCounter; n++) {
-				if (array_eq(&line[1], &threeLine[n][0], 3)) {
-					newLine = 0;
-					break;
+			if (lineSize == 3) {
+				newLine = 1;
+				for(n=0; n<threeLineCounter; n++) {
+					if (array_eq(&line[1], &threeLine[n][0], 3)) {
+						newLine = 0;
+						break;
+					}
+				}
+				if (newLine) {
+					threeLine[twoLineCounter][0] = line[1];
+					threeLine[twoLineCounter][1] = line[2];
+					threeLine[twoLineCounter][2] = line[3];
+					threeLineCounter++;
 				}
 			}
-			if (newLine) {
-				threeLine[twoLineCounter][0] = line[1];
-				threeLine[twoLineCounter][1] = line[2];
-				threeLine[twoLineCounter][2] = line[3];
-				threeLineCounter++;
+			if (lineSize == 4) {
+				printf("CONNECT FOUR!\n");
 			}
-		}
-		if (lineSize == 4) {
-			printf("CONNECT FOUR!\n");
-		}
 
-		//printf("line found : {%d, %d, %d, %d}\n", line[0], line[1], line[2], line[3]);
+			//printf("line found : {%d, %d, %d, %d}\n", line[0], line[1], line[2], line[3]);
+		}
 	}
+
 }

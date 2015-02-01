@@ -25,6 +25,7 @@ int main(void) {
 		}
 	}
 
+	grid[5][1] = P2;
 	grid[5][2] = P1;
 	grid[5][3] = P1;
 	grid[5][4] = P1;
