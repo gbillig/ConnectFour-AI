@@ -16,9 +16,13 @@
 #define P1		0;
 #define P2		1;
 
+typedef int gridType[6][7];
+
 int main(void) {
 
-	int grid[6][7];
+	gridType grid;
+	gridType *grid_ptr = &grid;
+
 	/*
 	 * Grid definitions:
 	 * 0 - Player 0
@@ -33,7 +37,7 @@ int main(void) {
 	}
 
 
-	int h = heuristic(&grid);
+	int h = heuristic(grid_ptr);
 	printf("%d\n", h);
 
 
