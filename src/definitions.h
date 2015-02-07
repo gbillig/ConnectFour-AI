@@ -9,6 +9,12 @@
 #define DEFINITIONS_H_
 
 #include <stdint.h>
+
+#define  MAX( a, b ) (( ( a > b) ? a : b ) )
+#define  MIN( a, b ) (( ( a < b) ? a : b ) )
+//#define MIN(X,Y) ((X) < (Y) ? : (X) : (Y))
+//#define MAX(X,Y) ((X) < (Y) ? : (Y) : (X))
+
 /*
  * Grid definitions:
  * 0 - Player 0
@@ -19,10 +25,8 @@
 #define P1		0
 #define P2		1
 #define EDGE	3
-/*
-#define P_INF	INT32_MAX;
-#define N_INF	INT32_MIN;
-*/
+#define DEPTH_VALUE 2
+
 typedef int gridType[6][7];
 typedef int largeGridType[8][9];
 

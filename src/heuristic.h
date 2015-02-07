@@ -10,11 +10,12 @@
 
 #include "definitions.h"
 
+int heuristic(gridType grid);
 void search(largeGridType grid, int i, int j, int direction, int PLAYER);
-int calc_lines(largeGridType grid);
-int heuristic(gridType* grid);
+int cmpfunc (const void * a, const void * b);
+int array_eq(int *x, int *y, int n);
+int calc_lines(largeGridType grid, int PLAYER);
+void displayGrid(gridType grid);
 
-
-int cmpfunc(const void * a, const void * b);
 
 #endif /* HEURISTIC_H_ */
