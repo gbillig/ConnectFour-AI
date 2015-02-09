@@ -24,7 +24,7 @@ int main(void) {
 
 	gridType grid;
 	int i,j;
-	int fromFile = 1;
+	int fromFile = 0;
 
 	if(fromFile) {
 		FILE *fp;
@@ -34,11 +34,11 @@ int main(void) {
 		char* inputValue;
 
 		if(fp != NULL) {
-			for (i=0;i<6;i++) {
+			for (j=0; j<6; j++) {
 				fgets(buff, 255, (FILE*)fp);
 				inputValue = strtok(buff, ",");
-				grid[i][0] = atoi(inputValue);
-				for (j=1;j<7;j++) {
+				grid[0][j] = atoi(inputValue);
+				for (i=1; i<7; i++) {
 					inputValue = strtok(NULL, ",");
 					grid[i][j] = atoi(inputValue);
 				}
@@ -46,30 +46,48 @@ int main(void) {
 		}
 		fclose(fp);
 	} else {
-		for (i=0; i<6; i++) {
-			for (j=0; j<7; j++) {
+		for (j=0; j<6; j++) {
+			for (i=0; i<7; i++) {
 				grid[i][j] = EMPTY;
 			}
 		}
 	}
 
 	int playerMove;
+	printf("start\n");
 	while (!endGame(grid)) {
+		displayGrid(grid);
 		minimax(grid, DEPTH_VALUE, 1);
 		printf("Player 1's turn. Column? ");
 		scanf("%d", &playerMove);
 		printf("\n");
-		makeMove(grid, playerMove, P1);
+		makeMove(grid, playerMove-1, P1);
 
+		displayGrid(grid);
 		printf("Player 2's turn. Column? ");
 		scanf("%d", &playerMove);
 		printf("\n");
-		makeMove(grid, playerMove, P2);
+		makeMove(grid, playerMove-1, P2);
 	}
 
+	/*
+	int k;
+	multiGridType childGrid;
+	for (k=0; k<7; k++) {
+		for (j=0; j<6; j++) {
+			for (i=0; i<7; i++) {
+				childGrid[k][i][j] = grid[i][j];
+			}
+		}
+	}
 
-	int h = heuristic(grid);
-	printf("h = %d\n", h);
+	int h;
+	for (i=0; i<7; i++) {
+		makeMove(childGrid[i], i, P1);
+		h = heuristic(grid);
+		printf("For move %d, h = %d\n", i, h);
+	}
+	*/
 
 	return 0;
 }
@@ -80,10 +98,10 @@ int minimax(gridType grid, int depth, int maximizingPlayer) {
 		return heuristic(grid);
 	}
 
-	gridType childGrid[7];
+	multiGridType childGrid;
 	for (k=0; k<7; k++) {
-		for (i=0; i<6; i++) {
-			for (j=0; j<7; j++) {
+		for (j=0; j<6; j++) {
+			for (i=0; i<7; i++) {
 				childGrid[k][i][j] = grid[i][j];
 			}
 		}
@@ -124,13 +142,13 @@ int minimax(gridType grid, int depth, int maximizingPlayer) {
 }
 
 int makeMove(gridType grid, int column, int PLAYER) {
-	if (grid[0][column] != EMPTY) {
+	if (grid[column][0] != EMPTY) {
 		return 0;
 	}
 	int i;
 	for (i=5; i>=0; i--) {
-		if (grid[i][column] == EMPTY) {
-			grid[i][column] = PLAYER;
+		if (grid[column][i] == EMPTY) {
+			grid[column][i] = PLAYER;
 			return 1;
 		}
 	}
@@ -141,7 +159,7 @@ int makeMove(gridType grid, int column, int PLAYER) {
 int endGame(gridType grid) {
 	int i;
 	for (i=0;i<7;i++) {
-		if (grid[0][i] == EMPTY) {
+		if (grid[i][0] == EMPTY) {
 			return 0;
 		}
 	}

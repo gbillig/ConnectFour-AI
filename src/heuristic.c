@@ -6,20 +6,23 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #include "definitions.h"
 #include "heuristic.h"
+
 
 int twoLine[2][128][2];
 int threeLine[2][128][3];
 int twoLineCounter[2] = {0, 0};
 int threeLineCounter[2] = {0, 0};
+int connectFour;
 
 int heuristic(gridType grid) {
 	largeGridType newGrid;
 	int i,j;
-	for (i=0; i<8; i++) {
-		for (j=0; j<9; j++) {
-			if (i==0 || i==7 || j==0 || j==8) {
+	for (j=0; j<8; j++) {
+		for (i=0; i<9; i++) {
+			if (i==0 || i==8 || j==0 || j==7) {
 				newGrid[i][j] = EDGE;
 			} else {
 				newGrid[i][j] = grid[i-1][j-1];
@@ -34,13 +37,14 @@ int heuristic(gridType grid) {
 	 *
 	 */
 
+	//displayGrid(grid);
 	int value = 0;
 	value += calc_lines(newGrid, P1);
 	value -= calc_lines(newGrid, P2);
 
 
-	displayGrid(grid);
-	printf("Player 0: %d (2-lines), %d (3-lines)\n", twoLineCounter[0], threeLineCounter[0]);
+	//printf("Player 0: %d (2-lines), %d (3-lines)\n", twoLineCounter[0], threeLineCounter[0]);
+
 	/*
 	for(i=0; i<twoLineCounter[0]; i++) {
 		printf("2line found : {%d, %d}\n", twoLine[0][i][0], twoLine[0][i][1]);
@@ -50,7 +54,8 @@ int heuristic(gridType grid) {
 	}
 	*/
 
-	printf("Player 1: %d (2-lines), %d (3-lines)\n", twoLineCounter[1], threeLineCounter[1]);
+	//printf("Player 1: %d (2-lines), %d (3-lines)\n", twoLineCounter[1], threeLineCounter[1]);
+
 	/*
 	for(i=0; i<twoLineCounter[1]; i++) {
 		printf("2line found : {%d, %d}\n", twoLine[1][i][0], twoLine[1][i][1]);
@@ -65,8 +70,9 @@ int heuristic(gridType grid) {
 
 int calc_lines(largeGridType grid, int PLAYER) {
 	int i,j;
-	for (i=1; i<7; i++) {
-		for (j=1; j<8; j++) {
+	connectFour = 0;
+	for (j=1; j<7; j++) {
+		for (i=1; i<8; i++) {
 			if (grid[i][j] == PLAYER) {
 				search(grid, i, j, 0, PLAYER);
 				search(grid, i, j, 1, PLAYER);
@@ -77,9 +83,13 @@ int calc_lines(largeGridType grid, int PLAYER) {
 	}
 
 	int value;
-	int twoLineValue = 3;
-	int threeLineValue = 10;
-	value = twoLineCounter[PLAYER]*twoLineValue + threeLineCounter[PLAYER]*threeLineValue;
+	if (connectFour) {
+		return INT_MAX;
+	} else {
+		int twoLineValue = 3;
+		int threeLineValue = 10;
+		value = twoLineCounter[PLAYER]*twoLineValue + threeLineCounter[PLAYER]*threeLineValue;
+	}
 
 	return value;
 }
@@ -87,8 +97,8 @@ int calc_lines(largeGridType grid, int PLAYER) {
 void search(largeGridType grid, int i, int j, int direction, int PLAYER) {
 	int x, y, xOffset, yOffset;
 	int line[4] = {0};
-	line[0] = j + i*8;
-	int lineCounter = 1;
+	line[0] = i + j*10;
+	int lineSize = 1;
 
 	switch(direction) {
 		case 0 :
@@ -97,15 +107,15 @@ void search(largeGridType grid, int i, int j, int direction, int PLAYER) {
 			break;
 		case 1 :
 			xOffset = 0;
-			yOffset = 1;
+			yOffset = -1;
 			break;
 		case 2 :
 			xOffset = 1;
-			yOffset = 1;
+			yOffset = -1;
 			break;
 		case 3 :
-			xOffset =  1;
-			yOffset = -1;
+			xOffset = 1;
+			yOffset = 1;
 			break;
 	}
 
@@ -113,14 +123,14 @@ void search(largeGridType grid, int i, int j, int direction, int PLAYER) {
 	int searching = 1;
 	int searchCounter = 1;
 	int deadEnd = 0;
-	while (searching) {
-		x = j+xOffset*searchCounter;
-		y = i+yOffset*searchCounter;
-		if (grid[y][x] == PLAYER) {
-			line[lineCounter] = x + y*8;
-			lineCounter++;
+	while (searching && lineSize<4) {
+		x = i+xOffset*searchCounter;
+		y = j+yOffset*searchCounter;
+		if (grid[x][y] == PLAYER) {
+			line[lineSize] = i + j*10;
+			lineSize++;
 			searchCounter++;
-		} else if (grid[y][x] == EMPTY) {
+		} else if (grid[x][y] == EMPTY) {
 			searching = 0;
 		} else {
 			searching = 0;
@@ -131,14 +141,14 @@ void search(largeGridType grid, int i, int j, int direction, int PLAYER) {
 	//search second direction
 	searching = 1;
 	searchCounter = 1;
-	while (searching) {
-		x = j+xOffset*searchCounter*(-1);
-		y = i+yOffset*searchCounter*(-1);
-		if (grid[y][x] == PLAYER) {
-			line[lineCounter] = x + y*8;
-			lineCounter++;
+	while (searching && lineSize<4) {
+		x = i+xOffset*searchCounter*(-1);
+		y = j+yOffset*searchCounter*(-1);
+		if (grid[x][y] == PLAYER) {
+			line[lineSize] = i + j*10;
+			lineSize++;
 			searchCounter++;
-		} else if (grid[y][x] == EMPTY) {
+		} else if (grid[x][y] == EMPTY) {
 			searching = 0;
 		} else {
 			searching = 0;
@@ -147,15 +157,7 @@ void search(largeGridType grid, int i, int j, int direction, int PLAYER) {
 	}
 
 	if (deadEnd < 2) {
-		int lineSize = 0;
-		int n;
-		for (n=0; n<4; n++) {
-			if (line[n] != 0) {
-				lineSize++;
-			}
-		}
-
-		int newLine;
+		int newLine, n;
 		if (lineSize > 1) {
 			qsort(line, 4, sizeof(*line), cmpfunc);
 			if (lineSize == 2) {
@@ -188,7 +190,8 @@ void search(largeGridType grid, int i, int j, int direction, int PLAYER) {
 				}
 			}
 			if (lineSize == 4) {
-				printf("CONNECT FOUR!\n");
+				//printf("CONNECT FOUR!\n");
+				connectFour = 1;
 			}
 
 			//printf("line found : {%d, %d, %d, %d}\n", line[0], line[1], line[2], line[3]);
@@ -213,8 +216,8 @@ int array_eq(int *x, int *y, int n)
 
 void displayGrid(gridType grid) {
 	int i,j;
-	for (i=0; i<6; i++) {
-		for (j=0; j<7; j++) {
+	for (j=0; j<6; j++) {
+		for (i=0; i<7; i++) {
 			switch(grid[i][j]) {
 				case(EMPTY) :
 					printf("0 ");

@@ -25,10 +25,11 @@
 #define P1		0
 #define P2		1
 #define EDGE	3
-#define DEPTH_VALUE 2
+#define DEPTH_VALUE 7
 
-typedef int gridType[6][7];
-typedef int largeGridType[8][9];
+typedef int gridType[7][6];
+typedef int largeGridType[9][8];
+typedef int multiGridType[7][7][6];
 
 
 
