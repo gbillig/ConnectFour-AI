@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <string.h>
+#include <time.h>
 #include "heuristic.h"
 #include "definitions.h"
 
@@ -53,11 +54,18 @@ int main(void) {
 		}
 	}
 
+	time_t start,end;
+	double dif;
 	int playerMove;
 	printf("start\n");
 	while (!endGame(grid)) {
 		displayGrid(grid);
-		minimax(grid, DEPTH_VALUE, 1);
+		time (&start);
+		minimax(grid, DEPTH_VALUE, P1);
+		time (&end);
+		dif = difftime (end,start);
+		printf ("Your calculations took %.2lf seconds to run.\n", dif );
+
 		printf("Player 1's turn. Column? ");
 		scanf("%d", &playerMove);
 		printf("\n");
@@ -108,14 +116,14 @@ int minimax(gridType grid, int depth, int maximizingPlayer) {
 	}
 
 
-	int bestValue;
-	int bestMove = 3;
-	int value;
-	if (maximizingPlayer) {
-		bestValue = 0;
+	int bestValue, bestMove, value;
+
+	if (maximizingPlayer == P1) {
+		bestMove = -1;
+		bestValue = INT_MIN;
 		for (i=0;i<7; i++) {
 			if (makeMove(childGrid[i], i, P1)) {
-				value = minimax(childGrid[i], depth - 1, 0);
+				value = minimax(childGrid[i], depth - 1, P2);
 				if (value > bestValue) {
 					bestValue = value;
 					bestMove = i;
@@ -126,11 +134,13 @@ int minimax(gridType grid, int depth, int maximizingPlayer) {
 			printf("AI recommends column %d.\n", bestMove+1);
 		}
 		return bestValue;
-	} else {
+
+	} else if (maximizingPlayer == P2) {
+		bestMove = -1;
 		bestValue = INT_MAX;
 		for (i=0;i<7; i++) {
 			if (makeMove(childGrid[i], i, P2)) {
-				value = minimax(childGrid[i], depth - 1, 1);
+				value = minimax(childGrid[i], depth - 1, P1);
 				if (value < bestValue) {
 					bestValue = value;
 					bestMove = i;
@@ -139,6 +149,8 @@ int minimax(gridType grid, int depth, int maximizingPlayer) {
 		}
 		return bestValue;
 	}
+
+	return -1;
 }
 
 int makeMove(gridType grid, int column, int PLAYER) {
