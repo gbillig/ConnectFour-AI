@@ -220,13 +220,13 @@ void displayGrid(gridType grid) {
 		for (i=0; i<7; i++) {
 			switch(grid[i][j]) {
 				case(EMPTY) :
-					printf("0 ");
+					printf("* ");
 					break;
 				case(P1) :
-					printf("1 ");
+					printf("0 ");
 					break;
 				case(P2) :
-					printf("2 ");
+					printf("1 ");
 					break;
 			}
 		}
