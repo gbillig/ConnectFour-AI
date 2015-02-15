@@ -223,10 +223,10 @@ void displayGrid(gridType grid) {
 					printf("* ");
 					break;
 				case(P1) :
-					printf("0 ");
+					printf("1 ");
 					break;
 				case(P2) :
-					printf("1 ");
+					printf("2 ");
 					break;
 			}
 		}
