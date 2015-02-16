@@ -16,4 +16,7 @@ int calc_lines2(gridType grid);
 int searchVertical(gridType grid);
 void searchHorizontal(gridType grid, int maxHeight);
 
+void addLine(int lineSize, int currentPlayer);
+
+
 #endif /* HEURISTIC2_H_ */

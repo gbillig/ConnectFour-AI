@@ -71,11 +71,7 @@ int searchVertical(gridType grid) {
 		for(j=5; j>=0; j--) {
 			// when a line ends with an empty space
 			if (grid[i][j] == EMPTY) {
-				if (lineSize == 2) {
-					lineCounter[currentPlayer][0]++;
-				} else if (lineSize == 3) {
-					lineCounter[currentPlayer][1]++;
-				}
+				addLine(lineSize, currentPlayer);
 				//break because nothing can be above
 				break;
 			}
@@ -103,7 +99,7 @@ int searchVertical(gridType grid) {
 
 void searchHorizontal(gridType grid, int maxHeight) {
 	int i,j;
-	int currentPlayer, lineSize, numEdges;
+	int currentPlayer, lineSize, numEdges, numEmptySpaces;
 
 
 	for(j=5; j>=maxHeight; j--) {
@@ -114,55 +110,68 @@ void searchHorizontal(gridType grid, int maxHeight) {
 		// currentPlayer possible values:
 		// 	P1 - Player 1
 		// 	P2 - Player 2
-		// 	-1 - Edge of grid
-		//  -2 - Empty space
+		// 	EDGE - Edge of grid
+		//  EMPTY - Empty space
 
-		currentPlayer = -1;
+		currentPlayer = EDGE;
 		lineSize = 0;
 		numEdges = 1;
-		for(i=0; i<7; i++) {
-			//when a line ends with an empty space
-			if (grid[i][j] == EMPTY) {
-				if (lineSize == 2) {
-					lineCounter[currentPlayer][0]++;
-				} else if (lineSize == 3) {
-					lineCounter[currentPlayer][1]++;
+		numEmptySpaces = 0;
+		for(i=0; i<8; i++) {
+			// when we reach the edge
+			if (i == 7) {
+				if (numEmptySpaces > 0) {
+					addLine(lineSize, currentPlayer);
 				}
-				currentPlayer = -2;
+			}
+			// next block is empty
+			else if (grid[i][j] == EMPTY) {
+				// the line has ended
+				if (currentPlayer == P1 || currentPlayer == P2) {
+					addLine(lineSize, currentPlayer);
+				}
+
+				currentPlayer = EMPTY;
 				lineSize = 0;
-				numEdges = 0;
+				numEmptySpaces++;
 			}
-			// when a line ends but has space to grow on the other side
-			else if (currentPlayer != grid[i][j] && numEdges == 0) {
-				if (lineSize == 2) {
-					lineCounter[currentPlayer][0]++;
-				} else if (lineSize == 3) {
-					lineCounter[currentPlayer][1]++;
+			// next block is a player
+			else if (grid[i][j] == P1 || grid[i][j] == P2) {
+				// the line continues
+				if (currentPlayer == grid[i][j]) {
+					lineSize++;
+					if (lineSize == 4) {
+						connectFour[currentPlayer] = 1;
+						break;
+					}
 				}
-				currentPlayer = grid[i][j];
-				lineSize = 1;
-				numEdges = 1;
-			}
-			// when a line continues
-			else if (grid[i][j] == currentPlayer) {
-				lineSize++;
-				if (lineSize == 4) {
-					connectFour[currentPlayer] = 1;
-					break;
+				// the line is starting
+				else if (currentPlayer == EMPTY || currentPlayer == EDGE) {
+					currentPlayer = grid[i][j];
+					lineSize = 1;
 				}
-			}
-			// when a new line starts
-			else if (currentPlayer != grid[i][j]){
-				// when an empty space precedes the line, numEdges = 0
-				// otherwise it can't grow from that side and numEdges = 1
-				numEdges = (currentPlayer == -2) ? 0 : 1;
-				lineSize = 1;
-				currentPlayer = grid[i][j];
+				// switches from one player to another
+				else {
+					currentPlayer = grid[i][j];
+					lineSize = 1;
+					numEmptySpaces = 0;
+				}
 			}
 		}
 	}
 }
 
+void addLine(int lineSize, int currentPlayer) {
+	if (currentPlayer != P1 && currentPlayer != P2) {
+		return;
+	}
+
+	if (lineSize == 2) {
+		lineCounter[currentPlayer][0]++;
+	} else if (lineSize == 3) {
+		lineCounter[currentPlayer][1]++;
+	}
+}
 
 
 
