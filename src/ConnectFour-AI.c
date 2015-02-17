@@ -30,7 +30,7 @@ int main(void) {
 
 	if(fromFile) {
 		FILE *fp;
-		fp = fopen("/home/gbillig/workspace/ConnectFour-AI/Debug/c4-3.csv", "r");
+		fp = fopen("/home/gbillig/workspace/ConnectFour-AI/Debug/c4-2.csv", "r");
 
 		char buff[255];
 		char* inputValue;
