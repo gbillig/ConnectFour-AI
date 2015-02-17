@@ -99,7 +99,7 @@ int searchVertical(gridType grid) {
 
 void searchHorizontal(gridType grid, int maxHeight) {
 	int i,j;
-	int currentPlayer, lineSize, numEdges, numEmptySpaces;
+	int currentPlayer, lineSize, numEmptySpaces;
 
 
 	for(j=5; j>=maxHeight; j--) {
@@ -115,10 +115,9 @@ void searchHorizontal(gridType grid, int maxHeight) {
 
 		currentPlayer = EDGE;
 		lineSize = 0;
-		numEdges = 1;
 		numEmptySpaces = 0;
 		for(i=0; i<8; i++) {
-			// when we reach the edge
+			// next block is the edge
 			if (i == 7) {
 				if (numEmptySpaces > 0) {
 					addLine(lineSize, currentPlayer);
@@ -152,6 +151,7 @@ void searchHorizontal(gridType grid, int maxHeight) {
 				}
 				// switches from one player to another
 				else {
+					addLine(lineSize, currentPlayer);
 					currentPlayer = grid[i][j];
 					lineSize = 1;
 					numEmptySpaces = 0;
