@@ -71,7 +71,7 @@ int searchVertical(gridType grid) {
 		for(j=5; j>=0; j--) {
 			// when a line ends with an empty space
 			if (grid[i][j] == EMPTY) {
-				addLine(lineSize, currentPlayer);
+				addLine(lineSize, currentPlayer, 2);
 				//break because nothing can be above
 				break;
 			}
@@ -99,7 +99,7 @@ int searchVertical(gridType grid) {
 
 void searchHorizontal(gridType grid, int maxHeight) {
 	int i,j;
-	int currentPlayer, lineSize, numEmptySpaces;
+	int previousBlock, currentPlayer, lineSize, numEmptySpaces;
 
 
 	for(j=5; j>=maxHeight; j--) {
@@ -107,52 +107,51 @@ void searchHorizontal(gridType grid, int maxHeight) {
 			break;
 		}
 
-		// currentPlayer possible values:
+		// previousBlock possible values:
 		// 	P1 - Player 1
 		// 	P2 - Player 2
 		// 	EDGE - Edge of grid
 		//  EMPTY - Empty space
 
-		currentPlayer = EDGE;
+		previousBlock = EDGE;
 		lineSize = 0;
 		numEmptySpaces = 0;
 		for(i=0; i<8; i++) {
 			// next block is the edge
 			if (i == 7) {
-				if (numEmptySpaces > 0) {
-					addLine(lineSize, currentPlayer);
+				if (lineSize > 1) {
+					addLine(lineSize, currentPlayer, numEmptySpaces);
 				}
 			}
 			// next block is empty
 			else if (grid[i][j] == EMPTY) {
-				// the line has ended
-				if (currentPlayer == P1 || currentPlayer == P2) {
-					addLine(lineSize, currentPlayer);
-				}
-
-				currentPlayer = EMPTY;
-				lineSize = 0;
+				previousBlock = EMPTY;
 				numEmptySpaces++;
 			}
 			// next block is a player
 			else if (grid[i][j] == P1 || grid[i][j] == P2) {
 				// the line continues
-				if (currentPlayer == grid[i][j]) {
+				if (previousBlock == grid[i][j]) {
 					lineSize++;
 					if (lineSize == 4) {
-						connectFour[currentPlayer] = 1;
+						connectFour[previousBlock] = 1;
 						break;
 					}
 				}
 				// the line is starting
-				else if (currentPlayer == EMPTY || currentPlayer == EDGE) {
+				else if (previousBlock == EMPTY || previousBlock == EDGE) {
+					if (lineSize > 1) {
+						addLine(lineSize, currentPlayer, numEmptySpaces);
+					}
 					currentPlayer = grid[i][j];
+					previousBlock = grid[i][j];
 					lineSize = 1;
 				}
 				// switches from one player to another
 				else {
-					addLine(lineSize, currentPlayer);
+					addLine(lineSize, previousBlock, numEmptySpaces);
 					currentPlayer = grid[i][j];
+					previousBlock = grid[i][j];
 					lineSize = 1;
 					numEmptySpaces = 0;
 				}
@@ -161,15 +160,15 @@ void searchHorizontal(gridType grid, int maxHeight) {
 	}
 }
 
-void addLine(int lineSize, int currentPlayer) {
-	if (currentPlayer != P1 && currentPlayer != P2) {
+void addLine(int lineSize, int player, int numEmptySpaces) {
+	if (player != P1 && player != P2) {
 		return;
 	}
 
-	if (lineSize == 2) {
-		lineCounter[currentPlayer][0]++;
-	} else if (lineSize == 3) {
-		lineCounter[currentPlayer][1]++;
+	if (lineSize == 2 && numEmptySpaces >= 2) {
+		lineCounter[player][0]++;
+	} else if (lineSize == 3 && numEmptySpaces >= 1) {
+		lineCounter[player][1]++;
 	}
 }
 
