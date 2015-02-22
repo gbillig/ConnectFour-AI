@@ -25,12 +25,12 @@ int makeMove(gridType grid, int column, int PLAYER);
 int main(void) {
 
 	gridType grid;
-	int i,j;
+	int i,j,k;
 	int fromFile = 1;
 
 	if(fromFile) {
 		FILE *fp;
-		fp = fopen("/home/gbillig/workspace/ConnectFour-AI/Debug/c4-2.csv", "r");
+		fp = fopen("/home/gbillig/workspace/ConnectFour-AI/Debug/c4-3.csv", "r");
 
 		char buff[255];
 		char* inputValue;
@@ -54,6 +54,8 @@ int main(void) {
 			}
 		}
 	}
+
+
 
 	displayGrid(grid);
 	heuristic2(grid);

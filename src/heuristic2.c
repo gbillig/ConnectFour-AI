@@ -28,9 +28,10 @@ int calc_lines2(gridType grid) {
 	int i,j;
 	int maxHeight;
 
-	//maxHeight = searchVertical(grid);
-	maxHeight = 0;
+	maxHeight = searchVertical(grid);
 	searchHorizontal(grid, maxHeight);
+	searchDiag1(grid);
+	searchDiag2(grid);
 
 	int value = 0;
 
@@ -164,6 +165,176 @@ void searchHorizontal(gridType grid, int maxHeight) {
 					lineSize = 1;
 				}
 			}
+		}
+	}
+}
+
+// SW to NE: "/"
+void searchDiag1(gridType grid) {
+	int i,j,k;
+	int previousBlock, currentPlayer, lineSize;
+	int prevEmptySpaces, postEmptySpaces;
+
+	for(k=0; k<HOR_SIZE + VER_SIZE; k++) {
+
+		if (k < 6) {
+			j = k;
+			i = 0;
+		} else {
+			j = 5;
+			i = k - 5;
+		}
+
+		if (connectFour[0] || connectFour[1]) {
+			break;
+		}
+
+		// previousBlock possible values:
+		// 	P1 - Player 1
+		// 	P2 - Player 2
+		// 	EDGE - Edge of grid
+		//  EMPTY - Empty space
+
+		previousBlock = EDGE;
+		lineSize = 0;
+		prevEmptySpaces = 0;
+		postEmptySpaces = 0;
+
+		while(j>=-1 && i<=7) {
+			// next block is the edge
+			if (j == -1 || i == 7) {
+				if (lineSize > 1) {
+					addLine(lineSize, currentPlayer, prevEmptySpaces + postEmptySpaces);
+				}
+			}
+			// next block is empty
+			else if (grid[i][j] == EMPTY) {
+				if (previousBlock == currentPlayer) {
+					prevEmptySpaces = postEmptySpaces;
+					postEmptySpaces = 0;
+				}
+				previousBlock = EMPTY;
+				postEmptySpaces++;
+			}
+			// next block is a player
+			else if (grid[i][j] == P1 || grid[i][j] == P2) {
+				// the line continues
+				if (previousBlock == grid[i][j]) {
+					lineSize++;
+					if (lineSize == 4) {
+						connectFour[previousBlock] = 1;
+						break;
+					}
+				}
+				// the line is starting
+				else if (previousBlock == EMPTY || previousBlock == EDGE) {
+					//count previous line
+					if (lineSize > 1) {
+						addLine(lineSize, currentPlayer, prevEmptySpaces + postEmptySpaces);
+					}
+					currentPlayer = grid[i][j];
+					previousBlock = grid[i][j];
+					lineSize = 1;
+				}
+				// switches from one player to another
+				else {
+					prevEmptySpaces = postEmptySpaces;
+					postEmptySpaces = 0;
+					addLine(lineSize, previousBlock, prevEmptySpaces + postEmptySpaces);
+					currentPlayer = grid[i][j];
+					previousBlock = grid[i][j];
+					lineSize = 1;
+				}
+			}
+
+			//iterator
+			j--;
+			i++;
+		}
+	}
+}
+
+// SE to NW: "\"
+void searchDiag2(gridType grid) {
+	int i,j,k;
+	int previousBlock, currentPlayer, lineSize;
+	int prevEmptySpaces, postEmptySpaces;
+
+	for(k=0; k<HOR_SIZE + VER_SIZE; k++) {
+
+		if (k < 6) {
+			j = k;
+			i = 6;
+		} else {
+			j = 5;
+			i = 6 - (k - 5);
+		}
+
+		if (connectFour[0] || connectFour[1]) {
+			break;
+		}
+
+		// previousBlock possible values:
+		// 	P1 - Player 1
+		// 	P2 - Player 2
+		// 	EDGE - Edge of grid
+		//  EMPTY - Empty space
+
+		previousBlock = EDGE;
+		lineSize = 0;
+		prevEmptySpaces = 0;
+		postEmptySpaces = 0;
+
+		while(j>=-1 && i>=-1) {
+			// next block is the edge
+			if (j == -1 || i == -1) {
+				if (lineSize > 1) {
+					addLine(lineSize, currentPlayer, prevEmptySpaces + postEmptySpaces);
+				}
+			}
+			// next block is empty
+			else if (grid[i][j] == EMPTY) {
+				if (previousBlock == currentPlayer) {
+					prevEmptySpaces = postEmptySpaces;
+					postEmptySpaces = 0;
+				}
+				previousBlock = EMPTY;
+				postEmptySpaces++;
+			}
+			// next block is a player
+			else if (grid[i][j] == P1 || grid[i][j] == P2) {
+				// the line continues
+				if (previousBlock == grid[i][j]) {
+					lineSize++;
+					if (lineSize == 4) {
+						connectFour[previousBlock] = 1;
+						break;
+					}
+				}
+				// the line is starting
+				else if (previousBlock == EMPTY || previousBlock == EDGE) {
+					//count previous line
+					if (lineSize > 1) {
+						addLine(lineSize, currentPlayer, prevEmptySpaces + postEmptySpaces);
+					}
+					currentPlayer = grid[i][j];
+					previousBlock = grid[i][j];
+					lineSize = 1;
+				}
+				// switches from one player to another
+				else {
+					prevEmptySpaces = postEmptySpaces;
+					postEmptySpaces = 0;
+					addLine(lineSize, previousBlock, prevEmptySpaces + postEmptySpaces);
+					currentPlayer = grid[i][j];
+					previousBlock = grid[i][j];
+					lineSize = 1;
+				}
+			}
+
+			//iterator
+			j--;
+			i--;
 		}
 	}
 }

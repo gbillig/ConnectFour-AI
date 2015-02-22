@@ -27,6 +27,9 @@
 #define EDGE	3
 #define DEPTH_VALUE 8
 
+#define HOR_SIZE 7
+#define VER_SIZE 6
+
 typedef int gridType[7][6];
 typedef int largeGridType[9][8];
 typedef int multiGridType[7][7][6];
