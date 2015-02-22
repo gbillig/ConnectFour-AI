@@ -25,7 +25,7 @@ int heuristic2(gridType grid) {
 
 
 int calc_lines2(gridType grid) {
-	int i,j;
+
 	int maxHeight;
 
 	maxHeight = searchVertical(grid);
@@ -35,16 +35,20 @@ int calc_lines2(gridType grid) {
 
 	int value = 0;
 
-	/*
-	if (connectFour) {
+	if (connectFour[0]) {
 		return INT_MAX;
+	} else if (connectFour[1]) {
+		return INT_MIN;
 	} else {
+
 		int twoLineValue = 3;
 		int threeLineValue = 10;
-		value = twoLineCounter[PLAYER]*twoLineValue + threeLineCounter[PLAYER]*threeLineValue;
-	}
-	*/
 
+		value += lineCounter[0][0]*twoLineValue + lineCounter[0][1]*threeLineValue;
+		value -= lineCounter[1][0]*twoLineValue + lineCounter[1][1]*threeLineValue;
+	}
+
+	/*
 	printf("%d twoLine found for P1\n", lineCounter[P1][0]);
 	printf("%d twoLine found for P2\n", lineCounter[P2][0]);
 	printf("%d threeLine found for P1\n", lineCounter[P1][1]);
@@ -52,6 +56,7 @@ int calc_lines2(gridType grid) {
 	printf("%d connectFour found for P1\n", connectFour[P1]);
 	printf("%d connectFour found for P2\n", connectFour[P2]);
 	printf("maxHeight = %d \n\n", maxHeight);
+	*/
 
 	return value;
 }
