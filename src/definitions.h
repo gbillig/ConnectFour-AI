@@ -25,7 +25,7 @@
 #define P1		0
 #define P2		1
 #define EDGE	3
-#define DEPTH_VALUE 8
+#define DEPTH_VALUE 7
 
 #define HOR_SIZE 7
 #define VER_SIZE 6

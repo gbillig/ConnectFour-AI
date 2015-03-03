@@ -10,12 +10,21 @@
 #include <limits.h>
 
 
-int lineCounter[2][2] = {0};
+int lineCounter[2][2] = {{0, 0}, {0,0}};
 int connectFour[2] = {0, 0};
 //  lineCounter[PLAYER][lineSize]
 
 
 int heuristic2(gridType grid) {
+
+	int i,j;
+
+	for (i=0; i<2; i++) {
+		connectFour[i] = 0;
+		for (j=0; j<2; j++) {
+			lineCounter[i][j] = 0;
+		}
+	}
 
 	int value = 0;
 	value += calc_lines2(grid);
@@ -57,6 +66,8 @@ int calc_lines2(gridType grid) {
 	printf("%d connectFour found for P2\n", connectFour[P2]);
 	printf("maxHeight = %d \n\n", maxHeight);
 	*/
+
+	//displayGrid(grid);
 
 	return value;
 }

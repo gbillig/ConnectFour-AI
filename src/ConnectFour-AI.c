@@ -17,16 +17,17 @@
 #include "heuristic2.h"
 #include "definitions.h"
 
-int endGame(gridType grid);
+int gridFull(gridType grid);
 int minimax(gridType grid, int depth, int maximizingPlayer);
 int makeMove(gridType grid, int column, int PLAYER);
-
+int rand_lim(int limit);
 
 int main(void) {
 
 	gridType grid;
 	int i,j,k;
-	int fromFile = 1;
+	int fromFile = 0;
+	srand(time(NULL));
 
 	if(fromFile) {
 		FILE *fp;
@@ -55,24 +56,11 @@ int main(void) {
 		}
 	}
 
-
-
-	displayGrid(grid);
-	heuristic2(grid);
-
-	/*
-
-	time_t start,end;
-	double dif;
 	int playerMove;
 	printf("start\n");
-	while (!endGame(grid)) {
+	while (!gridFull(grid)) {
 		displayGrid(grid);
-		time (&start);
 		minimax(grid, DEPTH_VALUE, P1);
-		time (&end);
-		dif = difftime (end,start);
-		printf ("Your calculations took %.2lf seconds to run.\n", dif );
 
 		printf("Player 1's turn. Column? ");
 		scanf("%d", &playerMove);
@@ -86,7 +74,6 @@ int main(void) {
 		makeMove(grid, playerMove-1, P2);
 	}
 
-	*/
 
 	/*
 	int k;
@@ -112,8 +99,9 @@ int main(void) {
 
 int minimax(gridType grid, int depth, int maximizingPlayer) {
 	int i,j,k;
-	if (depth == 0 || endGame(grid)) {
-		return heuristic(grid);
+
+	if (depth == 0 || gridFull(grid)) {
+		return heuristic2(grid);
 	}
 
 	multiGridType childGrid;
@@ -131,9 +119,12 @@ int minimax(gridType grid, int depth, int maximizingPlayer) {
 	if (maximizingPlayer == P1) {
 		bestMove = -1;
 		bestValue = INT_MIN;
-		for (i=0;i<7; i++) {
+		for (i=0; i<7; i++) {
 			if (makeMove(childGrid[i], i, P1)) {
 				value = minimax(childGrid[i], depth - 1, P2);
+				if (depth == DEPTH_VALUE) {
+					printf("Move %d value: %d\n", i, value);
+				}
 				if (value > bestValue) {
 					bestValue = value;
 					bestMove = i;
@@ -148,7 +139,7 @@ int minimax(gridType grid, int depth, int maximizingPlayer) {
 	} else if (maximizingPlayer == P2) {
 		bestMove = -1;
 		bestValue = INT_MAX;
-		for (i=0;i<7; i++) {
+		for (i=0; i<7; i++) {
 			if (makeMove(childGrid[i], i, P2)) {
 				value = minimax(childGrid[i], depth - 1, P1);
 				if (value < bestValue) {
@@ -178,7 +169,7 @@ int makeMove(gridType grid, int column, int PLAYER) {
 	return 1;
 }
 
-int endGame(gridType grid) {
+int gridFull(gridType grid) {
 	int i;
 	for (i=0;i<7;i++) {
 		if (grid[i][0] == EMPTY) {
@@ -186,4 +177,18 @@ int endGame(gridType grid) {
 		}
 	}
 	return 1;
+}
+
+int rand_lim(int limit) {
+/* return a random number between 0 and limit inclusive.
+ */
+
+    int divisor = RAND_MAX/(limit+1);
+    int retval;
+
+    do {
+        retval = rand() / divisor;
+    } while (retval > limit);
+
+    return retval;
 }
