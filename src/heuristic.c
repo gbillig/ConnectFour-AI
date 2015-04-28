@@ -213,24 +213,3 @@ int array_eq(int *x, int *y, int n)
             return 0;
     return 1;
 }
-
-void displayGrid(gridType grid) {
-	int i,j;
-	for (j=0; j<6; j++) {
-		for (i=0; i<7; i++) {
-			switch(grid[i][j]) {
-				case(EMPTY) :
-					printf("* ");
-					break;
-				case(P1) :
-					printf("1 ");
-					break;
-				case(P2) :
-					printf("2 ");
-					break;
-			}
-		}
-		printf("\n");
-	}
-	printf("\n");
-}

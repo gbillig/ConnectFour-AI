@@ -22,6 +22,7 @@ int gridFull(gridType grid);
 int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlayer);
 int makeMove(gridType grid, int column, int PLAYER);
 int rand_lim(int limit);
+void displayGrid(gridType grid);
 
 inline int max ( int a, int b ) { return a > b ? a : b; }
 inline int min ( int a, int b ) { return a < b ? a : b; }
@@ -60,9 +61,9 @@ int main(void) {
 		}
 	}
 
-	heuristic3(grid);
+	//heuristic3(grid);
 
-	/*
+
 	int playerMove;
 	printf("start\n");
 	while (!gridFull(grid)) {
@@ -80,7 +81,7 @@ int main(void) {
 		printf("\n");
 		makeMove(grid, playerMove-1, P2);
 	}
-	*/
+
 
 	/*
 	int k;
@@ -209,4 +210,25 @@ int rand_lim(int limit) {
     } while (retval > limit);
 
     return retval;
+}
+
+void displayGrid(gridType grid) {
+	int i,j;
+	for (j=0; j<6; j++) {
+		for (i=0; i<7; i++) {
+			switch(grid[i][j]) {
+				case(EMPTY) :
+					printf("* ");
+					break;
+				case(P1) :
+					printf("1 ");
+					break;
+				case(P2) :
+					printf("2 ");
+					break;
+			}
+		}
+		printf("\n");
+	}
+	printf("\n");
 }

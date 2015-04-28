@@ -15,7 +15,6 @@ void search(largeGridType grid, int i, int j, int direction, int PLAYER);
 int cmpfunc (const void * a, const void * b);
 int array_eq(int *x, int *y, int n);
 int calc_lines(largeGridType grid, int PLAYER);
-void displayGrid(gridType grid);
 
 
 #endif /* HEURISTIC_H_ */
