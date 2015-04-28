@@ -14,7 +14,8 @@
 #include <string.h>
 #include <time.h>
 //#include "heuristic.h"
-#include "heuristic2.h"
+//#include "heuristic2.h"
+#include "heuristic3.h"
 #include "definitions.h"
 
 int gridFull(gridType grid);
@@ -59,7 +60,7 @@ int main(void) {
 		}
 	}
 
-	heuristic2(grid);
+	heuristic3(grid);
 
 	/*
 	int playerMove;
