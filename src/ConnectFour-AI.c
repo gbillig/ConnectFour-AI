@@ -13,20 +13,23 @@
 #include <limits.h>
 #include <string.h>
 #include <time.h>
-#include "heuristic.h"
+//#include "heuristic.h"
 #include "heuristic2.h"
 #include "definitions.h"
 
 int gridFull(gridType grid);
-int minimax(gridType grid, int depth, int maximizingPlayer);
+int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlayer);
 int makeMove(gridType grid, int column, int PLAYER);
 int rand_lim(int limit);
+
+inline int max ( int a, int b ) { return a > b ? a : b; }
+inline int min ( int a, int b ) { return a < b ? a : b; }
 
 int main(void) {
 
 	gridType grid;
 	int i,j,k;
-	int fromFile = 0;
+	int fromFile = 1;
 	srand(time(NULL));
 
 	if(fromFile) {
@@ -56,11 +59,14 @@ int main(void) {
 		}
 	}
 
+	heuristic2(grid);
+
+	/*
 	int playerMove;
 	printf("start\n");
 	while (!gridFull(grid)) {
 		displayGrid(grid);
-		minimax(grid, DEPTH_VALUE, P1);
+		alphabeta(grid, DEPTH_VALUE, INT_MIN, INT_MAX, P1);
 
 		printf("Player 1's turn. Column? ");
 		scanf("%d", &playerMove);
@@ -73,7 +79,7 @@ int main(void) {
 		printf("\n");
 		makeMove(grid, playerMove-1, P2);
 	}
-
+	*/
 
 	/*
 	int k;
@@ -97,11 +103,11 @@ int main(void) {
 	return 0;
 }
 
-int minimax(gridType grid, int depth, int maximizingPlayer) {
+int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlayer) {
 	int i,j,k;
 
 	if (depth == 0 || gridFull(grid)) {
-		return heuristic2(grid);
+		return heuristic3(grid);
 	}
 
 	multiGridType childGrid;
@@ -114,21 +120,27 @@ int minimax(gridType grid, int depth, int maximizingPlayer) {
 	}
 
 
-	int bestValue, bestMove, value;
+	int bestMove, value, bestValue;
 
 	if (maximizingPlayer == P1) {
 		bestMove = -1;
 		bestValue = INT_MIN;
 		for (i=0; i<7; i++) {
 			if (makeMove(childGrid[i], i, P1)) {
-				value = minimax(childGrid[i], depth - 1, P2);
-				if (depth == DEPTH_VALUE) {
-					printf("Move %d value: %d\n", i, value);
-				}
+				value = alphabeta(childGrid[i], depth - 1, alpha, beta, P2);
 				if (value > bestValue) {
 					bestValue = value;
 					bestMove = i;
 				}
+
+				alpha = max(bestValue, alpha);
+				if (beta <= alpha) {
+					break;
+				}
+				if (depth == DEPTH_VALUE) {
+					printf("Move %d value: %d\n", i, value);
+				}
+
 			}
 		}
 		if (depth == DEPTH_VALUE) {
@@ -141,10 +153,15 @@ int minimax(gridType grid, int depth, int maximizingPlayer) {
 		bestValue = INT_MAX;
 		for (i=0; i<7; i++) {
 			if (makeMove(childGrid[i], i, P2)) {
-				value = minimax(childGrid[i], depth - 1, P1);
+				value = alphabeta(childGrid[i], depth - 1, alpha, beta, P1);
 				if (value < bestValue) {
 					bestValue = value;
 					bestMove = i;
+				}
+
+				beta  = min(value, beta);
+				if (beta <= alpha) {
+					break;
 				}
 			}
 		}
