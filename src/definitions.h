@@ -20,12 +20,13 @@
  * 0 - Player 0
  * 1 - Player 1
  * 2 - Empty
+ * 3 - Edge
  */
 #define EMPTY	2
 #define P1		0
 #define P2		1
 #define EDGE	3
-#define DEPTH_VALUE 7
+#define DEPTH_VALUE 10
 
 #define HOR_SIZE 7
 #define VER_SIZE 6

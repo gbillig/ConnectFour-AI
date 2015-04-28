@@ -57,15 +57,15 @@ int calc_lines2(gridType grid) {
 		value -= lineCounter[1][0]*twoLineValue + lineCounter[1][1]*threeLineValue;
 	}
 
-	/*
+
 	printf("%d twoLine found for P1\n", lineCounter[P1][0]);
-	printf("%d twoLine found for P2\n", lineCounter[P2][0]);
 	printf("%d threeLine found for P1\n", lineCounter[P1][1]);
-	printf("%d threeLine found for P2\n", lineCounter[P2][1]);
 	printf("%d connectFour found for P1\n", connectFour[P1]);
+	printf("%d twoLine found for P2\n", lineCounter[P2][0]);
+	printf("%d threeLine found for P2\n", lineCounter[P2][1]);
 	printf("%d connectFour found for P2\n", connectFour[P2]);
 	printf("maxHeight = %d \n\n", maxHeight);
-	*/
+
 
 	//displayGrid(grid);
 
