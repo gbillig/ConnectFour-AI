@@ -5,8 +5,8 @@
  *      Author: gbillig
  */
 
-#include "heuristic3.h"
-#include "definitions.h"
+#include "../inc/definitions.h"
+#include "../inc/heuristic3.h"
 #include <stdio.h>
 #include <limits.h>
 

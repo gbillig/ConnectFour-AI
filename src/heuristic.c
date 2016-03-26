@@ -7,8 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#include "definitions.h"
-#include "heuristic.h"
+#include "../inc/definitions.h"
+#include "../inc/heuristic.h"
 
 
 int twoLine[2][128][2];

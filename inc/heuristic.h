@@ -8,8 +8,6 @@
 #ifndef HEURISTIC_H_
 #define HEURISTIC_H_
 
-#include "definitions.h"
-
 int heuristic(gridType grid);
 void search(largeGridType grid, int i, int j, int direction, int PLAYER);
 int cmpfunc (const void * a, const void * b);

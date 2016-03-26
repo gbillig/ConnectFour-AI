@@ -8,8 +8,6 @@
 #ifndef HEURISTIC3_H_
 #define HEURISTIC3_H_
 
-#include "definitions.h"
-
 int heuristic3(gridType grid);
 int calc_lines3(gridType grid);
 

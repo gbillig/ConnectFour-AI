@@ -15,8 +15,8 @@
 #include <time.h>
 //#include "heuristic.h"
 //#include "heuristic2.h"
-#include "heuristic3.h"
-#include "definitions.h"
+#include "../inc/definitions.h"
+#include "../inc/heuristic3.h"
 
 int gridFull(gridType grid);
 int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlayer);
@@ -30,13 +30,13 @@ inline int min ( int a, int b ) { return a < b ? a : b; }
 int main(void) {
 
 	gridType grid;
-	int i,j,k;
+	int i,j;
 	int fromFile = 1;
 	srand(time(NULL));
 
 	if(fromFile) {
 		FILE *fp;
-		fp = fopen("/home/glb/workspace/ConnectFour-AI/Debug/c4-3.csv", "r");
+		fp = fopen("/home/glb/workspace/ConnectFour-AI/board_layout/c4-3.csv", "r");
 
 		char buff[255];
 		char* inputValue;
