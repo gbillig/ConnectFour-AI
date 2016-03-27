@@ -33,6 +33,12 @@ int calc_lines3(gridType grid) {
 
 	int maxHeight;
 
+	/*
+	 * Searching rules:
+	 *  - Find all 2-lines and 3-lines that have room to become 4-lines
+	 *  - Find all 4-lines
+	 */
+
 	searchVertical(grid);
 	searchHorizontal(grid);
 	searchDiag1(grid);
@@ -67,34 +73,42 @@ int calc_lines3(gridType grid) {
 
 void searchVertical(gridType grid) {
 	int i,j;
-	int line_owner, line_length;
+	int top_bound, bottom_bound;
+	int line_length, line_owner, local_valid;
 
 	for (i=0; i<7; i++) {
+		bottom_bound = 5;
+		top_bound = 2;
 
-		// if column is full, move to next column
-		// if column has less than 2 full slots, move to the next column
-		if (grid[i][0] != EMPTY || grid[i][VER_SIZE-2] == EMPTY) {
-			continue;
-		}
+		while (top_bound >= 0) {
+			line_owner = -1;
+			line_length = 0;
+			local_valid = 1;
+			for (j=bottom_bound; j>=top_bound; j--) {
+				if (local_valid) {
+					if (grid[i][j] != EMPTY) {
+						if (line_owner == -1) {
+							line_owner = grid[i][j];
+							line_length++;
+						} else if (grid[i][j] == line_owner) {
+							line_length++;
+						} else {
+							local_valid = 0;
+						}
+					}
+				}
+			}
 
-		// iterate over empty slots
-		// no need for upper bound on j since previous
-		// conditional skipped columns with less than 2 full slots
-		j = 1;
-		while (grid[i][j] == EMPTY) {
-			j++;
-		}
+			if (local_valid && line_length > 1) {
+				lineCounter[line_owner][line_length-2]++;
+				/*
+				printf("%d-line (vert)  found between (%d,%d) and (%d,%d)\n", local_count,
+								i, 5-bottom_bound, i, 5-top_bound);
+				*/
+			}
 
-		// start counting line length
-		line_owner = grid[i][j];
-		line_length = 0;
-		while (grid[i][j] == line_owner && j < VER_SIZE && line_length < 4) {
-			j++;
-			line_length++;
-		}
-
-		if (line_length >= 2) {
-			lineCounter[line_owner][line_length-2]++;
+			bottom_bound--;
+			top_bound--;
 		}
 	}
 }
