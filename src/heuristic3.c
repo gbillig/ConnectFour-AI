@@ -38,6 +38,12 @@ int calc_lines3(gridType grid) {
 	searchDiag1(grid);
 	searchDiag2(grid);
 
+	printf("%d 2-line found for P1\n", lineCounter[P1][0]);
+	printf("%d 3-line found for P1\n", lineCounter[P1][1]);
+	printf("%d 4-line found for P1\n", lineCounter[P1][2]);
+	printf("%d 2-line found for P2\n", lineCounter[P2][0]);
+	printf("%d 3-line found for P2\n", lineCounter[P2][1]);
+	printf("%d 4-line found for P2\n", lineCounter[P2][2]);
 
 	int value = 0;
 
@@ -54,61 +60,41 @@ int calc_lines3(gridType grid) {
 		value -= lineCounter[1][0]*twoLineValue + lineCounter[1][1]*threeLineValue;
 	}
 
-	/*
-	printf("%d 2-line found for P1\n", lineCounter[P1][0]);
-	printf("%d 3-line found for P1\n", lineCounter[P1][1]);
-	printf("%d 4-line found for P1\n", lineCounter[P1][2]);
-	printf("%d 2-line found for P2\n", lineCounter[P2][0]);
-	printf("%d 3-line found for P2\n", lineCounter[P2][1]);
-	printf("%d 4-line found for P2\n", lineCounter[P2][2]);
-	*/
-
-
 	//displayGrid(grid);
 
 	return value;
 }
 
 void searchVertical(gridType grid) {
-
-	int top_bound, bottom_bound;
 	int i,j;
-	//int maxHeight = 0;
-	int local_count, local_player, local_valid;
+	int line_owner, line_length;
 
 	for (i=0; i<7; i++) {
-		bottom_bound = 5;
-		top_bound = 2;
 
-		while (top_bound >= 0) {
-			local_player = -1;
-			local_count = 0;
-			local_valid = 1;
-			for (j=bottom_bound; j>=top_bound; j--) {
-				if (local_valid) {
-					if (grid[i][j] != EMPTY) {
-						if (local_player == -1) {
-							local_player = grid[i][j];
-							local_count++;
-						} else if (grid[i][j] == local_player) {
-							local_count++;
-						} else {
-							local_valid = 0;
-						}
-					}
-				}
-			}
+		// if column is full, move to next column
+		// if column has less than 2 full slots, move to the next column
+		if (grid[i][0] != EMPTY || grid[i][VER_SIZE-2] == EMPTY) {
+			continue;
+		}
 
-			if (local_valid && local_count > 1) {
-				lineCounter[local_player][local_count-2]++;
-				/*
-				printf("%d-line (vert)  found between (%d,%d) and (%d,%d)\n", local_count,
-								i, 5-bottom_bound, i, 5-top_bound);
-				*/
-			}
+		// iterate over empty slots
+		// no need for upper bound on j since previous
+		// conditional skipped columns with less than 2 full slots
+		j = 1;
+		while (grid[i][j] == EMPTY) {
+			j++;
+		}
 
-			bottom_bound--;
-			top_bound--;
+		// start counting line length
+		line_owner = grid[i][j];
+		line_length = 0;
+		while (grid[i][j] == line_owner && j < VER_SIZE && line_length < 4) {
+			j++;
+			line_length++;
+		}
+
+		if (line_length >= 2) {
+			lineCounter[line_owner][line_length-2]++;
 		}
 	}
 }
