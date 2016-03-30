@@ -74,41 +74,42 @@ int calc_lines3(gridType grid) {
 void searchVertical(gridType grid) {
 	int i,j;
 	int top_bound, bottom_bound;
-	int line_length, line_owner, local_valid;
+	int line_length, line_owner, line_is_valid;
 
+	// iterate over each column
 	for (i=0; i<7; i++) {
-		bottom_bound = 5;
-		top_bound = 2;
 
-		while (top_bound >= 0) {
-			line_owner = -1;
-			line_length = 0;
-			local_valid = 1;
-			for (j=bottom_bound; j>=top_bound; j--) {
-				if (local_valid) {
-					if (grid[i][j] != EMPTY) {
-						if (line_owner == -1) {
-							line_owner = grid[i][j];
-							line_length++;
-						} else if (grid[i][j] == line_owner) {
-							line_length++;
-						} else {
-							local_valid = 0;
-						}
-					}
-				}
+		// iterate over each potential 4-line starting from the bottom
+		for (bottom_bound = 5, top_bound = 2; top_bound >= 0; bottom_bound--, top_bound-- ) {
+			j = bottom_bound;
+			line_owner = grid[i][j];
+			line_is_valid = 1;
+
+			if (line_owner == EMPTY) {
+				continue;
 			}
 
-			if (local_valid && line_length > 1) {
+			line_length = 1;
+
+			// iterate over the slots in the potential 4-line
+			for ( j = j - 1 ; j >= top_bound; j--) {
+				if (grid[i][j] == EMPTY) {
+					break;
+				} else if (grid[i][j] != line_owner) {
+					line_is_valid = 0;
+					break;
+				}
+
+				line_length++;
+			}
+
+			if (line_length > 1 && line_is_valid) {
 				lineCounter[line_owner][line_length-2]++;
 				/*
 				printf("%d-line (vert)  found between (%d,%d) and (%d,%d)\n", local_count,
 								i, 5-bottom_bound, i, 5-top_bound);
 				*/
 			}
-
-			bottom_bound--;
-			top_bound--;
 		}
 	}
 }
