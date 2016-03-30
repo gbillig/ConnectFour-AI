@@ -6,18 +6,21 @@ LDLIBS = -lm
 
 OBJS = \
 bin/connect_four_ai.o \
+bin/util.o \
 bin/heuristic3.o
 #bin/heuristic.o \
 #bin/heuristic2.o \
 
 SRC = \
 src/connect_four_ai.c \
+src/util.c \
 src/heuristic3.c
 #src/heuristic.c \
 #src/heuristic2.c \
 
 INC = \
 inc/definitions.h \
+inc/util.h \
 inc/heuristic3.h
 #inc/heuristic.h \
 #inc/heuristic2.h \

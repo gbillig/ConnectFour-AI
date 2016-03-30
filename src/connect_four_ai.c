@@ -13,16 +13,11 @@
 #include <limits.h>
 #include <string.h>
 #include <time.h>
-//#include "heuristic.h"
-//#include "heuristic2.h"
 #include "../inc/definitions.h"
+#include "../inc/util.h"
 #include "../inc/heuristic3.h"
 
-int gridFull(gridType grid);
 int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlayer);
-int makeMove(gridType grid, int column, int PLAYER);
-int rand_lim(int limit);
-void displayGrid(gridType grid);
 
 inline int max ( int a, int b ) { return a > b ? a : b; }
 inline int min ( int a, int b ) { return a < b ? a : b; }
@@ -36,7 +31,7 @@ int main(void) {
 
 	if(fromFile) {
 		FILE *fp;
-		fp = fopen("/home/glb/workspace/ConnectFour-AI/board_layout/c4-3.csv", "r");
+		fp = fopen("/home/glb/workspace/ConnectFour-AI/board_layout/c4-4.csv", "r");
 
 		char buff[255];
 		char* inputValue;
@@ -61,6 +56,7 @@ int main(void) {
 		}
 	}
 
+	//displayGrid(grid);
 	//heuristic3(grid);
 
 
@@ -81,7 +77,6 @@ int main(void) {
 		printf("\n");
 		makeMove(grid, playerMove-1, P2);
 	}
-
 
 	/*
 	int k;
@@ -140,7 +135,7 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 					break;
 				}
 				if (depth == DEPTH_VALUE) {
-					printf("Move %d value: %d\n", i, value);
+					printf("Move %d value: %d\n", i+1, value);
 				}
 
 			}
@@ -171,64 +166,4 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 	}
 
 	return -1;
-}
-
-int makeMove(gridType grid, int column, int PLAYER) {
-	if (grid[column][0] != EMPTY) {
-		return 0;
-	}
-	int i;
-	for (i=5; i>=0; i--) {
-		if (grid[column][i] == EMPTY) {
-			grid[column][i] = PLAYER;
-			return 1;
-		}
-	}
-
-	return 1;
-}
-
-int gridFull(gridType grid) {
-	int i;
-	for (i=0;i<7;i++) {
-		if (grid[i][0] == EMPTY) {
-			return 0;
-		}
-	}
-	return 1;
-}
-
-int rand_lim(int limit) {
-/* return a random number between 0 and limit inclusive.
- */
-
-    int divisor = RAND_MAX/(limit+1);
-    int retval;
-
-    do {
-        retval = rand() / divisor;
-    } while (retval > limit);
-
-    return retval;
-}
-
-void displayGrid(gridType grid) {
-	int i,j;
-	for (j=0; j<6; j++) {
-		for (i=0; i<7; i++) {
-			switch(grid[i][j]) {
-				case(EMPTY) :
-					printf("* ");
-					break;
-				case(P1) :
-					printf(ANSI_COLOR_RED     "1 "     ANSI_COLOR_RESET);
-					break;
-				case(P2) :
-					printf(ANSI_COLOR_GREEN     "2 "     ANSI_COLOR_RESET);
-					break;
-			}
-		}
-		printf("\n");
-	}
-	printf("\n");
 }
