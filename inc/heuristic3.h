@@ -16,5 +16,4 @@ void searchHorizontal(gridType grid);
 void searchDiag1(gridType grid);
 void searchDiag2(gridType grid);
 
-
 #endif /* HEURISTIC3_H_ */

@@ -117,13 +117,16 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 	}
 
 
-	int bestMove, value, bestValue;
+	int bestMove, value, bestValue, moveResult;
 
 	if (maximizingPlayer == P1) {
 		bestMove = -1;
 		bestValue = INT_MIN;
 		for (i=0; i<7; i++) {
-			if (makeMove(childGrid[i], i, P1)) {
+			moveResult = makeMove(childGrid[i], i, P1);
+
+			if (moveResult == 1) {
+				// continue alphabeta execution
 				value = alphabeta(childGrid[i], depth - 1, alpha, beta, P2);
 				if (value > bestValue) {
 					bestValue = value;
@@ -137,7 +140,9 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 				if (depth == DEPTH_VALUE) {
 					printf("Move %d value: %d\n", i+1, value);
 				}
-
+			} else if (moveResult == 2){
+				// reached endgame scenario
+				return INT_MAX;
 			}
 		}
 		if (depth == DEPTH_VALUE) {
@@ -149,17 +154,24 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 		bestMove = -1;
 		bestValue = INT_MAX;
 		for (i=0; i<7; i++) {
-			if (makeMove(childGrid[i], i, P2)) {
+			moveResult = makeMove(childGrid[i], i, P2);
+
+			if (moveResult == 1) {
+				// continue alphabeta execution
 				value = alphabeta(childGrid[i], depth - 1, alpha, beta, P1);
 				if (value < bestValue) {
 					bestValue = value;
 					bestMove = i;
 				}
 
-				beta  = min(value, beta);
+				beta = min(value, beta);
 				if (beta <= alpha) {
 					break;
 				}
+
+			} else if (moveResult == 2) {
+				// reached endgame scenario
+				return INT_MIN;
 			}
 		}
 		return bestValue;
