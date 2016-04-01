@@ -102,9 +102,13 @@ int main(void) {
 
 int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlayer) {
 	int i,j,k;
+	int bestMove, value, bestValue, moveResult;
 
 	if (depth == 0 || gridFull(grid)) {
-		return heuristic3(grid);
+		value = heuristic3(grid);
+		//displayGrid(grid);
+		//printf("Heuristic value: %d\n", value);
+		return value;
 	}
 
 	multiGridType childGrid;
@@ -115,9 +119,6 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 			}
 		}
 	}
-
-
-	int bestMove, value, bestValue, moveResult;
 
 	if (maximizingPlayer == P1) {
 		bestMove = -1;
@@ -134,15 +135,25 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 				}
 
 				alpha = max(bestValue, alpha);
+
+				//printf("Maximizing P1. V = %d\n", value);
+				//displayGrid(grid);
+
+				// prune
 				if (beta <= alpha) {
 					break;
 				}
+				/*
 				if (depth == DEPTH_VALUE) {
 					printf("Move %d value: %d\n", i+1, value);
 				}
+				*/
+
 			} else if (moveResult == 2){
 				// reached endgame scenario
-				return INT_MAX;
+				bestMove = i;
+				bestValue = INT_MAX;
+				break;
 			}
 		}
 		if (depth == DEPTH_VALUE) {
@@ -165,13 +176,20 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 				}
 
 				beta = min(value, beta);
+
+				//printf("Maximizing P2. V = %d\n", value);
+				//displayGrid(grid);
+
+				// prune
 				if (beta <= alpha) {
 					break;
 				}
 
 			} else if (moveResult == 2) {
 				// reached endgame scenario
-				return INT_MIN;
+				bestMove = i;
+				bestValue = INT_MIN;
+				break;
 			}
 		}
 		return bestValue;

@@ -44,12 +44,14 @@ int calc_lines3(gridType grid) {
 	searchDiag1(grid);
 	searchDiag2(grid);
 
+	/*
 	printf("%d 2-line found for P1\n", lineCounter[P1][0]);
 	printf("%d 3-line found for P1\n", lineCounter[P1][1]);
 	printf("%d 4-line found for P1\n", lineCounter[P1][2]);
 	printf("%d 2-line found for P2\n", lineCounter[P2][0]);
 	printf("%d 3-line found for P2\n", lineCounter[P2][1]);
 	printf("%d 4-line found for P2\n", lineCounter[P2][2]);
+	*/
 
 	int value = 0;
 
