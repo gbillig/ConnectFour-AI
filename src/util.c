@@ -18,7 +18,7 @@ int isEndgame(gridType grid, int column, int row, int PLAYER) {
 	top_bound =  MAX(row - 3, 0);
 	bottom_bound = MIN(row + 3, 5);
 	left_bound = MAX(column - 3, 0);
-	right_bound = MIN(column - 3, 6);
+	right_bound = MIN(column + 3, 6);
 
 	// vertical
 	line_length = 1;
@@ -49,7 +49,7 @@ int isEndgame(gridType grid, int column, int row, int PLAYER) {
 			break;
 		}
 	}
-	for (i = column + 1; j <= right_bound; i++) {
+	for (i = column + 1; i <= right_bound; i++) {
 		if (grid[i][row] == PLAYER) {
 			line_length++;
 		} else {
