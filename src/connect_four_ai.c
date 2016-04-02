@@ -17,7 +17,7 @@
 #include "../inc/util.h"
 #include "../inc/heuristic3.h"
 
-int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlayer);
+int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlayer, int absolute_depth);
 
 inline int max ( int a, int b ) { return a > b ? a : b; }
 inline int min ( int a, int b ) { return a < b ? a : b; }
@@ -59,24 +59,48 @@ int main(void) {
 	//displayGrid(grid);
 	//heuristic3(grid);
 
+	//printf("makeMove returns %d\n", makeMove(grid, 1, P1));
+	//alphabeta(grid, 2, INT_MIN, INT_MAX, P1, 2);
 
-	int playerMove;
+	int playerMove, depth, move_count, move_result;
+	depth = DEPTH_VALUE;
+	move_count = 1;
+
+
 	printf("start\n");
 	while (!gridFull(grid)) {
+		if (move_count % 4 == 0) {
+			depth += 2;
+		}
+
 		displayGrid(grid);
-		alphabeta(grid, DEPTH_VALUE, INT_MIN, INT_MAX, P1);
+		alphabeta(grid, depth, INT_MIN, INT_MAX, P1, depth);
 
 		printf("Player 1's turn. Column? ");
 		scanf("%d", &playerMove);
 		printf("\n");
-		makeMove(grid, playerMove-1, P1);
+		move_result = makeMove(grid, playerMove-1, P1);
+		if (move_result == 2) {
+			displayGrid(grid);
+			printf("AI WINS!\n");
+			break;
+		}
 
 		displayGrid(grid);
 		printf("Player 2's turn. Column? ");
 		scanf("%d", &playerMove);
 		printf("\n");
-		makeMove(grid, playerMove-1, P2);
+		move_result = makeMove(grid, playerMove-1, P2);
+		if (move_result == 2) {
+			displayGrid(grid);
+			printf("CONGRATULATIONS, YOU WON!\n");
+			break;
+		}
+
+		move_count++;
 	}
+
+
 
 	/*
 	int k;
@@ -100,7 +124,7 @@ int main(void) {
 	return 0;
 }
 
-int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlayer) {
+int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlayer, int absolute_depth) {
 	int i,j,k;
 	int bestMove, value, bestValue, moveResult;
 
@@ -128,7 +152,7 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 
 			if (moveResult == 1) {
 				// continue alphabeta execution
-				value = alphabeta(childGrid[i], depth - 1, alpha, beta, P2);
+				value = alphabeta(childGrid[i], depth - 1, alpha, beta, P2, absolute_depth);
 				if (value > bestValue) {
 					bestValue = value;
 					bestMove = i;
@@ -143,11 +167,13 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 				if (beta <= alpha) {
 					break;
 				}
+
 				/*
-				if (depth == DEPTH_VALUE) {
+				if (depth == absolute_depth) {
 					printf("Move %d value: %d\n", i+1, value);
 				}
 				*/
+
 
 			} else if (moveResult == 2){
 				// reached endgame scenario
@@ -156,8 +182,13 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 				break;
 			}
 		}
-		if (depth == DEPTH_VALUE) {
-			printf("AI recommends column %d.\n", bestMove+1);
+		if (depth == absolute_depth) {
+
+			if (bestMove == -1) {
+				printf("AI concedes. YOU WIN!\n");
+			} else {
+				printf("AI recommends column %d.\n", bestMove+1);
+			}
 		}
 		return bestValue;
 
@@ -169,7 +200,7 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 
 			if (moveResult == 1) {
 				// continue alphabeta execution
-				value = alphabeta(childGrid[i], depth - 1, alpha, beta, P1);
+				value = alphabeta(childGrid[i], depth - 1, alpha, beta, P1, absolute_depth);
 				if (value < bestValue) {
 					bestValue = value;
 					bestMove = i;

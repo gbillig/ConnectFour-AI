@@ -60,7 +60,7 @@ int isEndgame(gridType grid, int column, int row, int PLAYER) {
 		return 1;
 	}
 
-	//diag_/
+	//diag_SW_to_NE
 	line_length = 1;
 	for (i = column - 1, j = row + 1; i >= left_bound && j <= bottom_bound; i--, j++) {
 		if (grid[i][j] == PLAYER) {
@@ -80,7 +80,7 @@ int isEndgame(gridType grid, int column, int row, int PLAYER) {
 		return 1;
 	}
 
-	//diag_\
+	//diag_NW_to_SE
     line_length = 1;
 	for (i = column - 1, j = row - 1; i >= left_bound && j >= top_bound; i--, j--) {
 		if (grid[i][j] == PLAYER) {
