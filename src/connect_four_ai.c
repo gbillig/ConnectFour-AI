@@ -69,7 +69,7 @@ int main(void) {
 
 	printf("start\n");
 	while (!gridFull(grid)) {
-		if (move_count % 4 == 0) {
+		if (move_count % 6 == 0) {
 			depth += 2;
 		}
 
