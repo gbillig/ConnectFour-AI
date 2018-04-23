@@ -39,4 +39,6 @@ typedef int gridType[7][6];
 typedef int largeGridType[9][8];
 typedef int multiGridType[7][7][6];
 
+int print_mode;
+
 #endif /* DEFINITIONS_H_ */

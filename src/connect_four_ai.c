@@ -19,10 +19,13 @@
 
 int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlayer, int absolute_depth);
 
-#define min(a,b) (((a)<(b))?(a):(b))
-#define max(a,b) (((a)>(b))?(a):(b))
+int main(int argc, char** argv) {
 
-int main(void) {
+	if (argc == 2 && strcmp(argv[1], "-nocolor") == 0) {
+		print_mode = 0;
+	} else {
+		print_mode = 1;
+	}
 
 	gridType grid;
 	int i,j;
@@ -41,7 +44,7 @@ int main(void) {
 				fgets(buff, 255, (FILE*)fp);
 				inputValue = strtok(buff, ",");
 				grid[0][j] = atoi(inputValue);
-				for (i=1; i<7; i++) {
+				for (i = 1; i < 7; i++) {
 					inputValue = strtok(NULL, ",");
 					grid[i][j] = atoi(inputValue);
 				}
@@ -49,14 +52,16 @@ int main(void) {
 		}
 		fclose(fp);
 	} else {
-		for (j=0; j<6; j++) {
-			for (i=0; i<7; i++) {
+		for (j = 0; j < 6; j++) {
+			for (i = 0; i < 7; i++) {
 				grid[i][j] = EMPTY;
 			}
 		}
 	}
 
-	//displayGrid(grid);
+	//printf("%d\n", make_move(grid, 4, P1));
+
+	//display_grid(grid);
 	//heuristic3(grid);
 
 	//printf("makeMove returns %d\n", makeMove(grid, 1, P1));
@@ -68,31 +73,31 @@ int main(void) {
 
 
 	printf("start\n");
-	while (!gridFull(grid)) {
+	while (!is_grid_full(grid)) {
 		if (move_count % 6 == 0) {
 			depth += 2;
 		}
 
-		displayGrid(grid);
+		display_grid(grid);
 		alphabeta(grid, depth, INT_MIN, INT_MAX, P1, depth);
 
 		printf("Player 1's turn. Column? ");
 		scanf("%d", &playerMove);
 		printf("\n");
-		move_result = makeMove(grid, playerMove-1, P1);
+		move_result = make_move(grid, playerMove - 1, P1);
 		if (move_result == 2) {
-			displayGrid(grid);
+			display_grid(grid);
 			printf("AI WINS!\n");
 			break;
 		}
 
-		displayGrid(grid);
+		display_grid(grid);
 		printf("Player 2's turn. Column? ");
 		scanf("%d", &playerMove);
 		printf("\n");
-		move_result = makeMove(grid, playerMove-1, P2);
+		move_result = make_move(grid, playerMove - 1, P2);
 		if (move_result == 2) {
-			displayGrid(grid);
+			display_grid(grid);
 			printf("CONGRATULATIONS, YOU WON!\n");
 			break;
 		}
@@ -128,7 +133,7 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 	int i,j,k;
 	int bestMove, value, bestValue, moveResult;
 
-	if (depth == 0 || gridFull(grid)) {
+	if (depth == 0 || is_grid_full(grid)) {
 		value = heuristic3(grid);
 		//displayGrid(grid);
 		//printf("Heuristic value: %d\n", value);
@@ -148,7 +153,7 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 		bestMove = -1;
 		bestValue = INT_MIN;
 		for (i = 0; i < 7; i++) {
-			moveResult = makeMove(childGrid[i], i, P1);
+			moveResult = make_move(childGrid[i], i, P1);
 
 			if (moveResult == 1) {
 				// continue alphabeta execution
@@ -158,10 +163,10 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 					bestMove = i;
 				}
 
-				alpha = max(bestValue, alpha);
+				alpha = MAX(bestValue, alpha);
 
 				//printf("Maximizing P1. V = %d\n", value);
-				//displayGrid(grid);
+				//display_grid(grid);
 
 				// prune
 				if (beta <= alpha) {
@@ -178,7 +183,7 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 			} else if (moveResult == 2){
 				// reached endgame scenario
 				bestMove = i;
-				bestValue = INT_MAX;
+				bestValue = INT_MAX - (DEPTH_VALUE - depth) * 10;
 				break;
 			}
 		}
@@ -196,7 +201,7 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 		bestMove = -1;
 		bestValue = INT_MAX;
 		for (i = 0; i < 7; i++) {
-			moveResult = makeMove(childGrid[i], i, P2);
+			moveResult = make_move(childGrid[i], i, P2);
 
 			if (moveResult == 1) {
 				// continue alphabeta execution
@@ -206,10 +211,10 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 					bestMove = i;
 				}
 
-				beta = min(value, beta);
+				beta = MIN(value, beta);
 
 				//printf("Maximizing P2. V = %d\n", value);
-				//displayGrid(grid);
+				//display_grid(grid);
 
 				// prune
 				if (beta <= alpha) {
@@ -219,7 +224,7 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 			} else if (moveResult == 2) {
 				// reached endgame scenario
 				bestMove = i;
-				bestValue = INT_MIN;
+				bestValue = INT_MIN + (DEPTH_VALUE - depth) * 10;
 				break;
 			}
 		}

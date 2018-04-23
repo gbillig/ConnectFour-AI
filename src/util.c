@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include "../inc/definitions.h"
 
-int isEndgame(gridType grid, int column, int row, int PLAYER) {
+int is_endgame(gridType grid, int column, int row, int PLAYER) {
 	int top_bound, right_bound, bottom_bound, left_bound;
 	int i,j;
 	int line_length;
@@ -103,7 +103,13 @@ int isEndgame(gridType grid, int column, int row, int PLAYER) {
 	return 0;
 }
 
-int makeMove(gridType grid, int column, int PLAYER) {
+int make_move(gridType grid, int column, int PLAYER) {
+	/* Return codes:
+	 * 0 - column is already full, invalid move
+	 * 1 - success
+	 * 2 - winning move
+	 */
+
 	if (grid[column][0] != EMPTY) {
 		return 0;
 	}
@@ -111,7 +117,7 @@ int makeMove(gridType grid, int column, int PLAYER) {
 	for (i = 5; i >= 0; i--) {
 		if (grid[column][i] == EMPTY) {
 			grid[column][i] = PLAYER;
-			if (isEndgame(grid, column, i, PLAYER)) {
+			if (is_endgame(grid, column, i, PLAYER)) {
 				return 2;
 			}
 			return 1;
@@ -121,9 +127,9 @@ int makeMove(gridType grid, int column, int PLAYER) {
 	return 1;
 }
 
-int gridFull(gridType grid) {
+int is_grid_full(gridType grid) {
 	int i;
-	for (i=0;i<7;i++) {
+	for (i = 0; i < 7; i++) {
 		if (grid[i][0] == EMPTY) {
 			return 0;
 		}
@@ -145,19 +151,27 @@ int rand_lim(int limit) {
     return retval;
 }
 
-void displayGrid(gridType grid) {
+void display_grid(gridType grid) {
 	int i,j;
-	for (j=0; j<6; j++) {
+	for (j = 0; j < 6; j++) {
 		for (i=0; i<7; i++) {
 			switch(grid[i][j]) {
-				case(EMPTY) :
+				case(EMPTY):
 					printf("* ");
 					break;
-				case(P1) :
-					printf(ANSI_COLOR_RED     "1 "     ANSI_COLOR_RESET);
+				case(P1):
+					if (print_mode == 0) {
+						printf("1 ");
+					} else {
+						printf(ANSI_COLOR_RED     "1 "     ANSI_COLOR_RESET);
+					}
 					break;
-				case(P2) :
-					printf(ANSI_COLOR_GREEN     "2 "     ANSI_COLOR_RESET);
+				case(P2):
+					if (print_mode == 0) {
+						printf("2 ");
+					} else {
+						printf(ANSI_COLOR_GREEN     "2 "     ANSI_COLOR_RESET);
+					}
 					break;
 			}
 		}

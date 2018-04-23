@@ -8,9 +8,9 @@
 #ifndef INC_UTIL_H_
 #define INC_UTIL_H_
 
-int gridFull(gridType grid);
-int makeMove(gridType grid, int column, int PLAYER);
+int is_grid_full(gridType grid);
+int make_move(gridType grid, int column, int PLAYER);
 int rand_lim(int limit);
-void displayGrid(gridType grid);
+void display_grid(gridType grid);
 
 #endif /* INC_UTIL_H_ */
