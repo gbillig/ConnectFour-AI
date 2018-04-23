@@ -108,7 +108,7 @@ int makeMove(gridType grid, int column, int PLAYER) {
 		return 0;
 	}
 	int i;
-	for (i=5; i>=0; i--) {
+	for (i = 5; i >= 0; i--) {
 		if (grid[column][i] == EMPTY) {
 			grid[column][i] = PLAYER;
 			if (isEndgame(grid, column, i, PLAYER)) {

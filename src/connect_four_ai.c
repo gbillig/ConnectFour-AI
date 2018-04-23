@@ -19,8 +19,8 @@
 
 int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlayer, int absolute_depth);
 
-inline int max ( int a, int b ) { return a > b ? a : b; }
-inline int min ( int a, int b ) { return a < b ? a : b; }
+#define min(a,b) (((a)<(b))?(a):(b))
+#define max(a,b) (((a)>(b))?(a):(b))
 
 int main(void) {
 
@@ -29,15 +29,15 @@ int main(void) {
 	int fromFile = 1;
 	srand(time(NULL));
 
-	if(fromFile) {
+	if (fromFile) {
 		FILE *fp;
-		fp = fopen("/home/glb/workspace/ConnectFour-AI/board_layout/c4-4.csv", "r");
+		fp = fopen("/home/glb/workspace/connect-four-ai/board_layout/c4-4.csv", "r");
 
 		char buff[255];
 		char* inputValue;
 
-		if(fp != NULL) {
-			for (j=0; j<6; j++) {
+		if (fp != NULL) {
+			for (j = 0; j < 6; j++) {
 				fgets(buff, 255, (FILE*)fp);
 				inputValue = strtok(buff, ",");
 				grid[0][j] = atoi(inputValue);
@@ -136,9 +136,9 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 	}
 
 	multiGridType childGrid;
-	for (k=0; k<7; k++) {
-		for (j=0; j<6; j++) {
-			for (i=0; i<7; i++) {
+	for (k = 0; k < 7; k++) {
+		for (j = 0; j < 6; j++) {
+			for (i = 0; i < 7; i++) {
 				childGrid[k][i][j] = grid[i][j];
 			}
 		}
@@ -147,7 +147,7 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 	if (maximizingPlayer == P1) {
 		bestMove = -1;
 		bestValue = INT_MIN;
-		for (i=0; i<7; i++) {
+		for (i = 0; i < 7; i++) {
 			moveResult = makeMove(childGrid[i], i, P1);
 
 			if (moveResult == 1) {
@@ -195,7 +195,7 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 	} else if (maximizingPlayer == P2) {
 		bestMove = -1;
 		bestValue = INT_MAX;
-		for (i=0; i<7; i++) {
+		for (i = 0; i < 7; i++) {
 			moveResult = makeMove(childGrid[i], i, P2);
 
 			if (moveResult == 1) {

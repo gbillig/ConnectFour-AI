@@ -17,8 +17,8 @@ int heuristic3(gridType grid) {
 	int i,j;
 
 	//initialize line counters
-	for (i=0; i<2; i++) {
-		for (j=0; j<3; j++) {
+	for ( i = 0; i < 2; i++) {
+		for (j = 00; j < 3; j++) {
 			lineCounter[i][j] = 0;
 		}
 	}
@@ -30,9 +30,6 @@ int heuristic3(gridType grid) {
 }
 
 int calc_lines3(gridType grid) {
-
-	int maxHeight;
-
 	/*
 	 * Searching rules:
 	 *  - Find all 2-lines and 3-lines that have room to become 4-lines
@@ -79,7 +76,7 @@ void searchVertical(gridType grid) {
 	int line_length, line_owner, line_is_valid;
 
 	// iterate over each column
-	for (i=0; i<7; i++) {
+	for (i = 0; i < 7; i++) {
 
 		// iterate over each potential 4-line starting from the bottom
 		for (bottom_bound = 5, top_bound = 2; top_bound >= 0; bottom_bound--, top_bound-- ) {
@@ -94,7 +91,7 @@ void searchVertical(gridType grid) {
 			line_length = 1;
 
 			// iterate over the slots in the potential 4-line
-			for ( j = j - 1 ; j >= top_bound; j--) {
+			for (j = j - 1 ; j >= top_bound; j--) {
 				if (grid[i][j] == EMPTY) {
 					break;
 				} else if (grid[i][j] != line_owner) {
@@ -121,7 +118,7 @@ void searchHorizontal(gridType grid) {
 	int i,j;
 	int local_count, local_player, local_valid;
 
-	for (j=0; j<6; j++) {
+	for (j = 0; j < 6; j++) {
 		left_bound = 0;
 		right_bound = 3;
 
@@ -129,7 +126,7 @@ void searchHorizontal(gridType grid) {
 			local_player = -1;
 			local_count = 0;
 			local_valid = 1;
-			for (i=left_bound; i<=right_bound; i++) {
+			for (i = left_bound; i <= right_bound; i++) {
 				if (local_valid) {
 					if (grid[i][j] != EMPTY) {
 						if (local_player == -1) {
@@ -166,7 +163,7 @@ void searchDiag1(gridType grid) {
 	int i,j,k;
 	int local_count, local_player, local_valid;
 
-	for (k=0; k<6; k++) {
+	for (k = 0; k < 6; k++) {
 
 		if (k<2) {
 			left_bound = 0;
@@ -184,7 +181,7 @@ void searchDiag1(gridType grid) {
 			local_player = -1;
 			local_count = 0;
 			local_valid = 1;
-			for (i=left_bound, j=bottom_bound; i<=right_bound; i++, j--) {
+			for (i = left_bound, j = bottom_bound; i <= right_bound; i++, j--) {
 				if (local_valid) {
 					if (grid[i][j] != EMPTY) {
 						if (local_player == -1) {
@@ -220,9 +217,9 @@ void searchDiag2(gridType grid) {
 	int i,j,k;
 	int local_count, local_player, local_valid;
 
-	for (k=0; k<6; k++) {
+	for (k = 0; k < 6; k++) {
 
-		if (k<2) {
+		if (k < 2) {
 			right_bound = 6;
 			left_bound = 3;
 			bottom_bound = k + 3;
@@ -238,7 +235,7 @@ void searchDiag2(gridType grid) {
 			local_player = -1;
 			local_count = 0;
 			local_valid = 1;
-			for (i=right_bound, j=bottom_bound; i>=left_bound; i--, j--) {
+			for (i = right_bound, j = bottom_bound; i >= left_bound; i--, j--) {
 				if (local_valid) {
 					if (grid[i][j] != EMPTY) {
 						if (local_player == -1) {
