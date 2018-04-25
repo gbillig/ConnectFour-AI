@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	//printf("%d\n", make_move(grid, 4, P1));
+	//printf("%d\n", make_move(grid, 0, P2));
 
 	//display_grid(grid);
 	//heuristic3(grid);
@@ -68,6 +68,7 @@ int main(int argc, char** argv) {
 	//alphabeta(grid, 2, INT_MIN, INT_MAX, P1, 2);
 
 	int playerMove, depth, move_count, move_result;
+	// with depth = DEPTH_VALUE + 2, failure
 	depth = DEPTH_VALUE;
 	move_count = 1;
 
@@ -183,7 +184,7 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 			} else if (moveResult == 2){
 				// reached endgame scenario
 				bestMove = i;
-				bestValue = INT_MAX - (DEPTH_VALUE - depth) * 10;
+				bestValue = INT_MAX - (absolute_depth - depth) * 10;
 				break;
 			}
 		}
@@ -224,7 +225,7 @@ int alphabeta(gridType grid, int depth, int alpha, int beta, int maximizingPlaye
 			} else if (moveResult == 2) {
 				// reached endgame scenario
 				bestMove = i;
-				bestValue = INT_MIN + (DEPTH_VALUE - depth) * 10;
+				bestValue = INT_MIN + (absolute_depth - depth) * 10;
 				break;
 			}
 		}
